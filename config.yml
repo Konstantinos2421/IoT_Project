@@ -1,0 +1,94 @@
+#--------------------- DB ----------------------
+# DB Connection with the uri (host)
+client: "mongodb://localhost:27017/"
+
+# db name
+db: "aiot_course"
+
+# db collection
+col: "activities"
+
+
+#--------------------- Dataframe Instantiation ----------------------
+# Dataframe columns list
+order: ["X", "Y", "Z"]
+rename: ["acc_x", "acc_y", "acc_z"]
+
+
+#--------------------- Dataset Local Storage ----------------------
+# dataset location
+data_path: "PAMAP2_Dataset"
+# single data instance location path to experiment with the data engineering process and visualization
+single_instance_path: "database_export.json"
+
+
+#--------------------- Data Engineering ----------------------
+# sliding window algorithm parameters
+sliding_window:
+  ws: 1500
+  overlap: 750
+  w_type: "hann"
+  w_center: True
+  print_stats: False
+
+# window to handle for visualization purposes
+x_number: 2
+
+# filtering parameterization
+filter:
+  order: 5
+  wn: 0.1
+  type: "lowpass"
+
+
+#--------------------- $ Data Preparation ----------------------
+# Dimensionality reduction
+PCA:
+  n_comp:
+
+
+#--------------------- Learning ----------------------
+# Classifier - Statistical
+classifier:
+  # classifier 1
+  SVC:
+    C: 1.0
+    kernel: "rbf"
+    gamma: "scale"
+  # classifier 2
+  RandomForest:
+    n_estimators: 100
+    n_jobs: -1
+    class_weight: "balanced"
+  # classifier 3
+  kNN:
+    n_neighbors: 10
+    weights: "distance"
+    metric: "manhattan"
+    n_jobs: -1
+
+# Parameter Grid for Fine-tuning, for instance, a Grid Search classifier
+fine_tune:
+  SVC:
+    param_grid:
+      C: [0.1, 1, 10, 100]
+      kernel: ["rbf", "linear"]
+      gamma: ["scale", "auto", 0.001, 0.01]
+      class_weight: ["balanced", null]
+
+  RandomForest:
+    param_grid:
+      n_estimators: [100, 200, 300]
+      max_depth: [null, 10, 20, 30]
+      min_samples_split: [2, 5, 10]
+      min_samples_leaf: [1, 2, 4]
+      class_weight: ["balanced", null]
+
+  kNN:
+    param_grid:
+      n_neighbors: [3, 5, 7, 11, 15]
+      weights: ["uniform", "distance"]
+      metric: ["euclidean", "manhattan"]
+
+  cv: 5
+  verbose: 2
